@@ -1,41 +1,57 @@
-# Profil développeur Compose
+# Profil Développeur – V2
 
 ## Description
 
-Application Android en Jetpack Compose qui affiche une fiche « Profil développeur » : nom, rôle, description, liste de compétences et disponibilité.
-L'utilisateur peut cliquer sur la zone de disponibilité ou sur le bouton « Contacter ».
-L'écran est découpé en composables réutilisables, avec deux previews montrant deux profils différents.
+C'est une petite application Android faite avec Jetpack Compose qui affiche mon profil de développeur.
+On y trouve ma photo, mon nom, une courte description, mes compétences, quelques projets et une partie contact.
+
+C'est la deuxième version du devoir : j'ai repris la première application et j'ai essayé de la rendre plus complète et plus propre.
+Les données sont écrites directement dans le code Kotlin, il n'y a pas d'API ni de base de données.
+
+## Capture d'écran
+
+<img src="./Images/Profil_Dev_Preview.png" alt="Profil_Dev_Preview" width="300"> 
+<img src="./Images/TelView_Part1.png" alt="TelView_Part1" width="300">
+<img src="./Images/TelView_Part2.png" alt="TelView_Part2" width="300">
+
+## Composants Compose utilisés
+
+- `Text` : pour le nom, le rôle, la description et les titres des sections
+- `Button` : pour les boutons "Contacter" et "Portfolio"
+- `Icon` : dans les boutons et devant l'email et la localisation
+- `Image` : pour ma photo et pour les images des projets
+- `Card` : pour la partie "Info" avec la description
+- `OutlinedTextField` en lecture seule : pour afficher l'email et la localisation
+## Layouts utilisés
+
+- `Column` : pour mettre les éléments les uns sous les autres (header, sections, contact…)
+- `Row` : pour mettre les deux boutons de contact côte à côte
+- `Box` : pour superposer mon nom sur ma photo dans le header
+- `Spacer` : pour ajouter de l'espace entre les titres et les listes
+- `Surface` : pour le header, la section Skills, les projets et la partie contact
+## Les listes (LazyColumn / LazyRow)
+
+Tout l'écran est une `LazyColumn`. Chaque partie du profil (header, info, skills, projets, contact) est ajoutée avec un `item { }`.
+
+J'ai aussi utilisé deux `LazyRow` :
+- une pour les compétences, où chaque compétence est affichée avec le composable `SkillItem`
+- une pour les projets, où chaque projet est affiché avec le composable `ProjetItem`
+  Les projets viennent d'une `data class Project` et d'une fonction `sampleProjects()` qui renvoie la liste.
+  Avec `items(projects, key = { it.id })`, chaque projet est affiché automatiquement, pas besoin de les écrire un par un.
+
+L'avantage par rapport à une `Column` normale, c'est que seuls les éléments visibles à l'écran sont affichés.
+
+## Choix du thème
+
+J'ai utilisé le thème Material 3 de l'application (`GreetingCardTheme`) et j'ai essayé de ne pas mettre de couleurs en dur :
+- `colorScheme.primary` pour le header et les compétences, pour qu'ils ressortent
+- `colorScheme.surfaceVariant` pour les blocs Skills, Projets et Contact
+- `MaterialTheme.typography` pour les tailles de texte (`headlineSmall`, `titleMedium`, `bodyMedium`)
+- `MaterialTheme.shapes` pour arrondir les blocs (`small`, `medium`, `large`)
+  Il y a une preview en thème clair et une preview en thème sombre pour vérifier que l'application reste lisible dans les deux cas.
 
 ## Notions utilisées
 
-- Composables et paramètres
-- `Modifier` et chaînage de modifiers
-- Padding externe / interne
-- Callbacks
-- `Scaffold` et `innerPadding`
-- Previews
-- Accessibilité de base (`semantics`, `Role.Button`, `contentDescription`)
+J'ai réutilisé la plupart des choses qu'on avait apprises durant les TPs : les composants de base (Text, Button, Icon, Image, Card, OutlinedTextField), les layouts (Column, Row, Box, Spacer, Surface), les listes avec LazyColumn et LazyRow, et le thème Material 3 en clair et en sombre.
 
-## Explication
-
-1. **Composables créés :** `ProfileScreen`, `ProfileCard`, `ProfileHeader`, `SkillItem`, `AvailabilityInfo`, `ContactButton`.
-2. **Écran principal :** `ProfileScreen`, appelé dans `MainActivity` avec le `innerPadding` du `Scaffold`.
-3. **Padding externe :** dans `ProfileScreen`, qui passe `modifier.fillMaxWidth().padding(24.dp)` à `ProfileCard` : le parent place la carte dans l'écran.
-4. **Padding interne :** dans `ProfileCard`, la `Column` à l'intérieur de la `Surface` a un `padding(16.dp)` : la carte espace son propre contenu.
-5. **Callback :** `ContactButton` et `AvailabilityInfo` reçoivent un `onClick`. Ils signalent le clic, la logique est fournie par `ProfileScreen`.
-6. **Accessibilité :** `AvailabilityInfo` est une zone cliquable personnalisée, donc j'ai ajouté `semantics` avec `role = Role.Button` et une `contentDescription`. Le `ContactButton` utilise un `Button`, qui indique déjà son rôle aux lecteurs d'écran.
-7. **Réutilisabilité :** les composants reçoivent leurs données en paramètres et acceptent un `modifier: Modifier = Modifier`. Ils peuvent donc afficher n'importe quel profil, comme le montrent les deux previews.
-
-## Captures
-
-**Application lancée**
-
-<img src="AppliTel.png" alt="Application lancée" width="300">
-
-**Previews**
-
-<img src="Preview1.png" alt="Preview 1" width="300"> <img src="Preview2.png" alt="Preview 2" width="300">
-
-## Lien du dépôt
-
-https://github.com/MNolhan/ProfilDeveloppeur
+J'ai aussi repris le principe des data class qu'on avait utilisé dans Product Explorer : une `data class Project` pour décrire un projet, et une fonction `sampleProjects()` qui renvoie la liste des projets affichés dans la LazyRow.
